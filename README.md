@@ -2,20 +2,9 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
-
-Your goal is to:
-
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
+This project builds a simple content-based music recommender in Python. It compares song features with a user's taste profile, calculates weighted similarity scores, and ranks songs to generate personalized recommendations. The project also explores how feature weighting and limited data can influence recommendation quality and introduce bias.
 
 ---
-
-## How The System Works
 
 ## How The System Works
 
@@ -27,74 +16,108 @@ Collaborative filtering uses patterns in user behavior. For example, if two user
 
 Content-based filtering focuses on the attributes or features of songs. If a user frequently enjoys high-energy pop songs, the system can recommend other songs with similar characteristics. Song features might include genre, mood, tempo, and energy.
 
-Many real-world recommendation systems combine these approaches. For a basic Python music recommender, content-based filtering is a good starting point because each song can be represented using simple features such as genre, mood, tempo, and energy.
+Many real-world recommendation systems combine these approaches. For this basic Python music recommender, content-based filtering is used because songs can be represented using features and compared directly with a user's preferences.
 
 ### My Recommendation System
 
-This project simulates a simple content-based music recommendation system. This version focuses on comparing song attributes with a user's stated music preferences. Each song is scored based on how closely its features match the user's taste, and the songs with the highest scores are ranked as the top recommendations.
+This project simulates a simple content-based music recommendation system. It compares song attributes with a user's stated music preferences. Each song receives a weighted score based on how closely it matches the user's taste, and the highest-scoring songs are ranked as the top recommendations.
 
-The `Song` object uses the following features:
+The song dataset includes the following features:
+
 - Genre
 - Mood
 - Energy
 - Tempo
+- Valence
+- Danceability
+- Acousticness
 
-The `UserProfile` stores the user's preferences for:
-- Preferred genre
-- Preferred mood
-- Preferred energy
-- Preferred tempo
+For the initial scoring system, the recommender prioritizes:
 
-The recommender compares each song with the user's preferences using a weighted scoring rule. Genre and mood matches contribute to the score, while numerical features such as energy and tempo are scored based on how close they are to the user's preferred values. After every song receives a score, the recommender ranks the songs from highest to lowest score and returns the best matches.
+- Genre
+- Mood
+- Energy
 
+The `UserProfile` uses:
+
+- Favorite genre
+- Favorite mood
+- Target energy
+
+### Test User Profile
+
+For the initial simulation, the recommender will use the following test profile:
+
+```python
+user_profile = {
+    "favorite_genre": "lofi",
+    "favorite_mood": "chill",
+    "target_energy": 0.40
+}
+```
+
+This profile helps test whether the recommender can distinguish between songs with very different characteristics, such as intense rock and chill lofi. Genre and mood provide categorical preferences, while target energy allows the system to measure how closely a song's energy level matches the user's preference.
+
+### Recommendation Scoring Logic
+
+The recommender uses a weighted scoring system to determine how closely each song matches the user's preferences. Genre receives the highest weight because it is treated as a strong indicator of musical preference. Mood provides an additional categorical match, while energy is scored according to its closeness to the user's target energy.
+
+The finalized algorithm recipe is:
+
+- **Genre match:** +2.0 points if the song's genre matches the user's favorite genre.
+- **Mood match:** +1.0 point if the song's mood matches the user's favorite mood.
+- **Energy similarity:** `1 - abs(song_energy - target_energy)`
+
+For example, for a user who prefers `lofi`, `chill`, and a target energy of `0.40`, a lofi/chill song with an energy of `0.42` would receive:
+
+```text
+Genre match       = 2.00
+Mood match        = 1.00
+Energy similarity = 1 - abs(0.42 - 0.40)
+                  = 0.98
+----------------------------------------
+Total score       = 3.98
+```
+
+The scoring rule is applied to every song in the catalog. After all songs receive a score, the ranking rule sorts them from highest to lowest. The highest-scoring songs become the personalized recommendations.
 
 ### Recommendation Flow
 
 ```text
-              USER DATA
-          +----------------+
-          |  UserProfile   |
-          |----------------|
-          | Preferred Genre|
-          | Preferred Mood |
-          | Preferred Energy|
-          | Preferred Tempo|
-          +--------+-------+
-                   |
-                   | Compare preferences
-                   v
-+------------------+------------------+
-|                                     |
-|             SONG CATALOG            |
-|                                     |
-|  Song 1       Song 2       Song 3   |
-|  Genre        Genre        Genre    |
-|  Mood         Mood         Mood     |
-|  Energy       Energy       Energy   |
-|  Tempo        Tempo        Tempo    |
-|                                     |
-+------------------+------------------+
-                   |
-                   | Weighted Scoring Rule
-                   v
-          +----------------+
-          | Calculate Score|
-          | for Each Song  |
-          +--------+-------+
-                   |
-                   | Ranking Rule
-                   v
-          +----------------+
-          | Rank Songs     |
-          | Highest Score  |
-          | to Lowest Score|
-          +--------+-------+
-                   |
-                   v
-          +----------------+
-          | Personalized   |
-          | Recommendations|
-          +----------------+
+INPUT
+User Profile
+- Favorite Genre: lofi
+- Favorite Mood: chill
+- Target Energy: 0.40
+        |
+        v
+SONG CATALOG
+Load songs from songs.csv
+        |
+        v
+PROCESS
+For Each Song:
+- Check genre match (+2.0)
+- Check mood match (+1.0)
+- Calculate energy similarity
+- Calculate total score
+        |
+        v
+RANKING
+Sort all songs by total score
+from highest to lowest
+        |
+        v
+OUTPUT
+Return Top K
+Personalized Recommendations
+```
+
+### Potential Biases
+
+This simple recommender may over-prioritize genre because a genre match receives the highest fixed weight. As a result, songs from other genres that closely match the user's preferred mood or energy may rank lower.
+
+The system may also create a filter bubble by repeatedly recommending music similar to the user's existing preferences, reducing opportunities to discover new genres or moods. Future versions could use more features, adjust feature weights, or introduce diversity into the final recommendations.
 
 ---
 
@@ -106,24 +129,37 @@ The recommender compares each song with the user's preferences using a weighted 
 
    ```bash
    python -m venv .venv
-   source .venv/bin/activate      # Mac or Linux
-   .venv\Scripts\activate         # Windows
+   ```
 
-2. Install dependencies
+2. Activate the virtual environment:
 
-```bash
-pip install -r requirements.txt
-```
+   **Mac or Linux:**
 
-3. Run the app:
+   ```bash
+   source .venv/bin/activate
+   ```
 
-```bash
-python -m src.main
-```
+   **Windows PowerShell:**
+
+   ```powershell
+   .venv\Scripts\Activate.ps1
+   ```
+
+3. Install dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Run the app:
+
+   ```bash
+   python -m src.main
+   ```
 
 ### Running Tests
 
-Run the starter tests with:
+Run the tests with:
 
 ```bash
 pytest
@@ -135,42 +171,19 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
-
-```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
-```
-
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
+Sample recommendation output will be added after the recommender is implemented.
 
 ---
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
-
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+Experiments with different feature weights and user profiles will be documented after implementation and testing.
 
 ---
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+The current design uses a small song catalog and a limited set of user preferences. The recommender may over-prioritize certain features, such as genre, and could repeatedly recommend similar music. Additional limitations will be evaluated after implementation and testing.
 
 ---
 
@@ -180,10 +193,4 @@ Read and complete `model_card.md`:
 
 [**Model Card**](model_card.md)
 
-Write 1 to 2 paragraphs here about what you learned:
-
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
-
-
-
+A final reflection on recommendation predictions, bias, and fairness will be added after implementation and evaluation.
