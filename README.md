@@ -171,7 +171,29 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Sample recommendation output will be added after the recommender is implemented.
+## Sample Recommendation Output
+
+The following output was generated using the default user profile with a preferred genre of `pop`, a preferred mood of `happy`, and a target energy of `0.8`.
+
+```text
+Loaded songs: 20
+
+Top recommendations:
+
+Sunrise City - Score: 3.98
+Because: genre match (+2.0), mood match (+1.0), energy similarity (+0.98)
+
+Gym Hero - Score: 2.87
+Because: genre match (+2.0), energy similarity (+0.87)
+
+Rooftop Lights - Score: 1.96
+Because: mood match (+1.0), energy similarity (+0.96)
+
+Electric Bloom - Score: 0.99
+Because: energy similarity (+0.99)
+
+Neon Horizon - Score: 0.98
+Because: energy similarity (+0.98)
 
 ---
 
