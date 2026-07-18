@@ -10,19 +10,22 @@
 
 **What task did you give the agent?**
 
-<!-- Describe the goal you asked the agent to accomplish -->
+I asked the AI coding assistant to help extend the music recommender by adding at least five advanced song attributes that were not included in the baseline dataset. The goal was to add more detailed song information that could later be incorporated into the recommendation scoring logic.
 
 **Prompts used:**
 
-<!-- Paste the key prompts you gave the agent -->
+"Suggest five or more advanced song attributes that are not currently included in my dataset. My existing attributes are id, title, artist, genre, mood, energy, tempo_bpm, valence, danceability, and acousticness. The new features should include a mix of numerical and categorical attributes that can be used to improve a content-based music recommender."
+
+"Update my 20-song CSV dataset by adding the selected advanced attributes while preserving all existing song data. Use realistic values for each new attribute."
 
 **What did the agent generate or change?**
 
-<!-- List the files edited, code generated, or commands run -->
+The AI suggested five additional attributes: `popularity`, `release_decade`, `detailed_mood`, `instrumentalness`, and `speechiness`. It generated values for these attributes for all 20 songs in `data/songs.csv` while preserving the existing song information.
 
 **What did you verify or fix manually?**
 
-<!-- Describe anything the agent got wrong or that required human review -->
+
+I reviewed the updated CSV structure to confirm that all 20 songs contained values for the five new attributes and that the original song data was preserved. I checked that popularity values were between 0 and 100 and that instrumentalness and speechiness values were between 0.0 and 1.0. I updated the CSV loader to convert the new numerical attributes to the correct Python data types and verified that the recommender ran successfully with all four test profiles. I also confirmed that the advanced attributes contributed to the recommendation scores and appeared correctly in the explanations.
 
 ---
 

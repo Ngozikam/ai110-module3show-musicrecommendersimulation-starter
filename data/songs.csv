@@ -1,21 +1,21 @@
-id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
-1,Sunrise City,Neon Echo,pop,happy,0.82,118,0.84,0.79,0.18
-2,Midnight Coding,LoRoom,lofi,chill,0.42,78,0.56,0.62,0.71
-3,Storm Runner,Voltline,rock,intense,0.91,152,0.48,0.66,0.10
-4,Library Rain,Paper Lanterns,lofi,chill,0.35,72,0.60,0.58,0.86
-5,Gym Hero,Max Pulse,pop,intense,0.93,132,0.77,0.88,0.05
-6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,0.28,60,0.65,0.41,0.92
-7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,0.37,90,0.71,0.54,0.89
-8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22
-9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78
-10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35
-11,Neon Horizon,Luma Fields,synthwave,nostalgic,0.78,118,0.62,0.70,0.18
-12,Quiet Pines,Elena Hart,folk,peaceful,0.32,84,0.58,0.42,0.86
-13,Midnight Cipher,Vector Bloom,drum and bass,intense,0.95,174,0.40,0.68,0.05
-14,Golden Steps,The Sunny Hours,reggae,relaxed,0.55,78,0.82,0.84,0.22
-15,Velvet Lantern,Amara Blue,jazz,romantic,0.38,92,0.71,0.49,0.54
-16,Desert Echoes,Solar Nomad,world,adventurous,0.67,110,0.76,0.73,0.31
-17,Silent Orbit,Nova Chamber,ambient,dreamy,0.20,68,0.52,0.18,0.91
-18,Concrete Pulse,Eastline Crew,hip hop,confident,0.83,96,0.66,0.88,0.10
-19,Crimson Strings,Aria Vale,classical,dramatic,0.64,72,0.35,0.24,0.79
-20,Electric Bloom,Prism Avenue,funk,playful,0.81,124,0.91,0.93,0.12
+id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness,popularity,release_decade,detailed_mood,instrumentalness,speechiness
+1,Sunrise City,Neon Echo,pop,happy,0.82,118,0.84,0.79,0.18,88,2020,euphoric,0.05,0.08
+2,Midnight Coding,LoRoom,lofi,chill,0.42,78,0.56,0.62,0.71,72,2020,calm,0.68,0.06
+3,Storm Runner,Voltline,rock,intense,0.91,152,0.48,0.66,0.10,84,2010,aggressive,0.04,0.09
+4,Library Rain,Paper Lanterns,lofi,chill,0.35,72,0.60,0.58,0.86,67,2020,serene,0.74,0.04
+5,Gym Hero,Max Pulse,pop,intense,0.93,132,0.77,0.88,0.05,91,2020,energetic,0.02,0.10
+6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,0.28,60,0.65,0.41,0.92,58,2010,dreamy,0.89,0.03
+7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,0.37,90,0.71,0.54,0.89,63,2000,warm,0.42,0.05
+8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22,79,2020,nocturnal,0.55,0.07
+9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78,75,2020,contemplative,0.72,0.04
+10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35,82,2010,uplifting,0.08,0.09
+11,Neon Horizon,Luma Fields,synthwave,nostalgic,0.78,118,0.62,0.70,0.18,77,2020,retro,0.61,0.06
+12,Quiet Pines,Elena Hart,folk,peaceful,0.32,84,0.58,0.42,0.86,65,2010,serene,0.18,0.05
+13,Midnight Cipher,Vector Bloom,drum and bass,intense,0.95,174,0.40,0.68,0.05,86,2020,aggressive,0.70,0.08
+14,Golden Steps,The Sunny Hours,reggae,relaxed,0.55,78,0.82,0.84,0.22,73,2000,carefree,0.06,0.12
+15,Velvet Lantern,Amara Blue,jazz,romantic,0.38,92,0.71,0.49,0.54,69,2000,intimate,0.25,0.05
+16,Desert Echoes,Solar Nomad,world,adventurous,0.67,110,0.76,0.73,0.31,71,2010,exploratory,0.36,0.07
+17,Silent Orbit,Nova Chamber,ambient,dreamy,0.20,68,0.52,0.18,0.91,54,2020,ethereal,0.94,0.02
+18,Concrete Pulse,Eastline Crew,hip hop,confident,0.83,96,0.66,0.88,0.10,89,2020,bold,0.03,0.38
+19,Crimson Strings,Aria Vale,classical,dramatic,0.64,72,0.35,0.24,0.79,61,1990,melancholic,0.96,0.01
+20,Electric Bloom,Prism Avenue,funk,playful,0.81,124,0.91,0.93,0.12,85,2010,joyful,0.07,0.11

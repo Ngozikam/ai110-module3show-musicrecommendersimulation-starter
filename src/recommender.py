@@ -44,9 +44,8 @@ class Recommender:
     def explain_recommendation(self, user: UserProfile, song: Song) -> str:
         # TODO: Implement explanation logic
         return "Explanation placeholder"
-    
+
 def load_songs(csv_path: str) -> List[Dict]:
-    
     """Load songs from a CSV file and convert numerical fields to numeric types."""
 
     import csv
@@ -57,6 +56,7 @@ def load_songs(csv_path: str) -> List[Dict]:
         reader = csv.DictReader(file)
 
         for row in reader:
+            # Existing numerical attributes
             row["id"] = int(row["id"])
             row["energy"] = float(row["energy"])
             row["tempo_bpm"] = float(row["tempo_bpm"])
@@ -64,31 +64,69 @@ def load_songs(csv_path: str) -> List[Dict]:
             row["danceability"] = float(row["danceability"])
             row["acousticness"] = float(row["acousticness"])
 
+            # Advanced numerical attributes
+            row["popularity"] = int(row["popularity"])
+            row["release_decade"] = int(row["release_decade"])
+            row["instrumentalness"] = float(row["instrumentalness"])
+            row["speechiness"] = float(row["speechiness"])
+
             songs.append(row)
 
     return songs
 
-    
 def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
-    """Calculate a song's preference score and return the reasons for the score."""
+    """Calculate a song's preference score using basic and advanced features."""
 
     score = 0.0
     reasons = []
 
-    # Genre match
+    # Basic features
+
     if song["genre"] == user_prefs["genre"]:
         score += 2.0
         reasons.append("genre match (+2.0)")
 
-    # Mood match
     if song["mood"] == user_prefs["mood"]:
         score += 1.0
         reasons.append("mood match (+1.0)")
 
-    # Energy similarity
     energy_similarity = 1 - abs(song["energy"] - user_prefs["energy"])
     score += energy_similarity
     reasons.append(f"energy similarity (+{energy_similarity:.2f})")
+
+    # Advanced features
+
+    if song["detailed_mood"] == user_prefs["detailed_mood"]:
+        score += 0.5
+        reasons.append("detailed mood match (+0.5)")
+
+    popularity_similarity = 1 - abs(
+        song["popularity"] - user_prefs["popularity"]
+    ) / 100
+    score += 0.5 * popularity_similarity
+    reasons.append(
+        f"popularity similarity (+{0.5 * popularity_similarity:.2f})"
+    )
+
+    if song["release_decade"] == user_prefs["release_decade"]:
+        score += 0.5
+        reasons.append("release decade match (+0.5)")
+
+    instrumentalness_similarity = 1 - abs(
+        song["instrumentalness"] - user_prefs["instrumentalness"]
+    )
+    score += 0.5 * instrumentalness_similarity
+    reasons.append(
+        f"instrumentalness similarity (+{0.5 * instrumentalness_similarity:.2f})"
+    )
+
+    speechiness_similarity = 1 - abs(
+        song["speechiness"] - user_prefs["speechiness"]
+    )
+    score += 0.5 * speechiness_similarity
+    reasons.append(
+        f"speechiness similarity (+{0.5 * speechiness_similarity:.2f})"
+    )
 
     return score, reasons
 
