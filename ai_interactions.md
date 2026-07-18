@@ -35,12 +35,12 @@ I reviewed the updated CSV structure to confirm that all 20 songs contained valu
 
 **Which design pattern did you use?**
 
-<!-- e.g., Strategy, Factory, Observer, etc. -->
+I used a simple Strategy-style pattern to support multiple recommendation scoring modes: `genre_first`, `mood_first`, and `energy_focused`.
 
 **How did AI help you brainstorm or implement it?**
 
-<!-- Describe the conversation or suggestions that led to your decision -->
+I asked the AI coding assistant to suggest a modular way to support multiple ranking strategies without duplicating the recommendation logic. The AI suggested a Strategy-style approach where each scoring mode uses different weights for genre, mood, and energy. I reviewed the suggestion and implemented a simple dictionary of strategy weights that fits the scope of this project.
 
 **How does the pattern appear in your final code?**
 
-<!-- Point to the relevant class or method -->
+The pattern appears in the `score_song()` function in `src/recommender.py`, where the selected `mode` determines which set of scoring weights is used. The `recommend_songs()` function passes the selected mode to `score_song()`, and `src/main.py` allows the scoring mode to be changed between `genre_first`, `mood_first`, and `energy_focused`.

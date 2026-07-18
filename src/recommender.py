@@ -74,25 +74,62 @@ def load_songs(csv_path: str) -> List[Dict]:
 
     return songs
 
-def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
-    """Calculate a song's preference score using basic and advanced features."""
+def score_song(
+    user_prefs: Dict,
+    song: Dict,
+    mode: str = "genre_first"
+) -> Tuple[float, List[str]]:
+    """Calculate a song's preference score using the selected scoring mode."""
 
     score = 0.0
     reasons = []
 
+    # Scoring strategies
+    strategies = {
+        "genre_first": {
+            "genre": 3.0,
+            "mood": 1.0,
+            "energy": 1.0
+        },
+        "mood_first": {
+            "genre": 1.0,
+            "mood": 3.0,
+            "energy": 1.0
+        },
+        "energy_focused": {
+            "genre": 1.0,
+            "mood": 1.0,
+            "energy": 3.0
+        }
+    }
+
+    if mode not in strategies:
+        raise ValueError(f"Unknown scoring mode: {mode}")
+
+    weights = strategies[mode]
+
     # Basic features
 
     if song["genre"] == user_prefs["genre"]:
-        score += 2.0
-        reasons.append("genre match (+2.0)")
+        score += weights["genre"]
+        reasons.append(
+            f"genre match (+{weights['genre']:.1f})"
+        )
 
     if song["mood"] == user_prefs["mood"]:
-        score += 1.0
-        reasons.append("mood match (+1.0)")
+        score += weights["mood"]
+        reasons.append(
+            f"mood match (+{weights['mood']:.1f})"
+        )
 
-    energy_similarity = 1 - abs(song["energy"] - user_prefs["energy"])
-    score += energy_similarity
-    reasons.append(f"energy similarity (+{energy_similarity:.2f})")
+    energy_similarity = 1 - abs(
+        song["energy"] - user_prefs["energy"]
+    )
+    energy_score = weights["energy"] * energy_similarity
+    score += energy_score
+    reasons.append(
+        f"energy similarity (+{energy_score:.2f})"
+    )
 
     # Advanced features
 
@@ -103,9 +140,10 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     popularity_similarity = 1 - abs(
         song["popularity"] - user_prefs["popularity"]
     ) / 100
-    score += 0.5 * popularity_similarity
+    popularity_score = 0.5 * popularity_similarity
+    score += popularity_score
     reasons.append(
-        f"popularity similarity (+{0.5 * popularity_similarity:.2f})"
+        f"popularity similarity (+{popularity_score:.2f})"
     )
 
     if song["release_decade"] == user_prefs["release_decade"]:
@@ -115,31 +153,42 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     instrumentalness_similarity = 1 - abs(
         song["instrumentalness"] - user_prefs["instrumentalness"]
     )
-    score += 0.5 * instrumentalness_similarity
+    instrumentalness_score = 0.5 * instrumentalness_similarity
+    score += instrumentalness_score
     reasons.append(
-        f"instrumentalness similarity (+{0.5 * instrumentalness_similarity:.2f})"
+        f"instrumentalness similarity (+{instrumentalness_score:.2f})"
     )
 
     speechiness_similarity = 1 - abs(
         song["speechiness"] - user_prefs["speechiness"]
     )
-    score += 0.5 * speechiness_similarity
+    speechiness_score = 0.5 * speechiness_similarity
+    score += speechiness_score
     reasons.append(
-        f"speechiness similarity (+{0.5 * speechiness_similarity:.2f})"
+        f"speechiness similarity (+{speechiness_score:.2f})"
     )
 
     return score, reasons
 
 
-def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
-    """Score and rank songs, returning the top k recommendations with explanations."""
+def recommend_songs(
+    user_prefs: Dict,
+    songs: List[Dict],
+    k: int = 5,
+    mode: str = "genre_first"
+) -> List[Tuple[Dict, float, str]]:
+    """Score and rank songs using the selected scoring mode."""
 
     scored_songs = []
 
     for song in songs:
-        score, reasons = score_song(user_prefs, song)
-        explanation = ", ".join(reasons)
+        score, reasons = score_song(
+            user_prefs,
+            song,
+            mode=mode
+        )
 
+        explanation = ", ".join(reasons)
         scored_songs.append((song, score, explanation))
 
     ranked_songs = sorted(
@@ -149,6 +198,5 @@ def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tup
     )
 
     return ranked_songs[:k]
-
 
 

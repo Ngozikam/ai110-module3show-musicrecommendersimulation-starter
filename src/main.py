@@ -16,6 +16,15 @@ def main() -> None:
     songs = load_songs("data/songs.csv")
     print(f"Loaded songs: {len(songs)}")
 
+    # Select the scoring strategy.
+    # Available modes:
+    # "genre_first"
+    # "mood_first"
+    # "energy_focused"
+    scoring_mode = "genre_first"
+
+    print(f"Scoring mode: {scoring_mode}")
+
     user_profiles = {
         "High-Energy Pop": {
             "genre": "pop",
@@ -70,7 +79,8 @@ def main() -> None:
         recommendations = recommend_songs(
             user_prefs,
             songs,
-            k=5
+            k=5,
+            mode=scoring_mode
         )
 
         print("\nTop recommendations:\n")
