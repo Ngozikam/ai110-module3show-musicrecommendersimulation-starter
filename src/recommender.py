@@ -170,17 +170,17 @@ def score_song(
 
     return score, reasons
 
-
 def recommend_songs(
     user_prefs: Dict,
     songs: List[Dict],
     k: int = 5,
     mode: str = "genre_first"
 ) -> List[Tuple[Dict, float, str]]:
-    """Score and rank songs using the selected scoring mode."""
+    """Score and rank songs while applying a diversity penalty."""
 
     scored_songs = []
 
+    # Calculate the original score for every song
     for song in songs:
         score, reasons = score_song(
             user_prefs,
@@ -188,15 +188,56 @@ def recommend_songs(
             mode=mode
         )
 
-        explanation = ", ".join(reasons)
-        scored_songs.append((song, score, explanation))
+        scored_songs.append((song, score, reasons))
 
-    ranked_songs = sorted(
-        scored_songs,
-        key=lambda item: item[1],
-        reverse=True
-    )
+    recommendations = []
+    selected_artists = set()
+    selected_genres = {}
 
-    return ranked_songs[:k]
+    while scored_songs and len(recommendations) < k:
+        adjusted_songs = []
 
+        for song, score, reasons in scored_songs:
+            adjusted_score = score
+            adjusted_reasons = reasons.copy()
 
+            # Penalize an artist already represented in the recommendations
+            if song["artist"] in selected_artists:
+                adjusted_score -= 1.0
+                adjusted_reasons.append("repeat artist diversity penalty (-1.0)")
+
+            # Penalize a genre that is already heavily represented
+            if selected_genres.get(song["genre"], 0) >= 2:
+                adjusted_score -= 0.5
+                adjusted_reasons.append("repeat genre diversity penalty (-0.5)")
+
+            adjusted_songs.append(
+                (song, adjusted_score, adjusted_reasons)
+            )
+
+        # Select the song with the highest adjusted score
+        best_song, best_score, best_reasons = max(
+            adjusted_songs,
+            key=lambda item: item[1]
+        )
+
+        explanation = ", ".join(best_reasons)
+
+        recommendations.append(
+            (best_song, best_score, explanation)
+        )
+
+        # Track artists and genres already selected
+        selected_artists.add(best_song["artist"])
+
+        selected_genres[best_song["genre"]] = (
+            selected_genres.get(best_song["genre"], 0) + 1
+        )
+
+        # Remove the selected song from the remaining candidates
+        scored_songs = [
+            item for item in scored_songs
+            if item[0]["id"] != best_song["id"]
+        ]
+
+    return recommendations

@@ -44,3 +44,17 @@ I asked the AI coding assistant to suggest a modular way to support multiple ran
 **How does the pattern appear in your final code?**
 
 The pattern appears in the `score_song()` function in `src/recommender.py`, where the selected `mode` determines which set of scoring weights is used. The `recommend_songs()` function passes the selected mode to `score_song()`, and `src/main.py` allows the scoring mode to be changed between `genre_first`, `mood_first`, and `energy_focused`.
+
+## Diversity and Fairness Logic
+
+**Prompt used:**
+
+Update my music recommender to add a diversity penalty during ranking. If a song's artist is already represented in the current top recommendations, reduce that song's score so songs from different artists have a better chance of appearing. Also consider preventing too many songs from the same genre. Keep the existing scoring modes and advanced song features unchanged, and implement the diversity logic in a simple, readable way without modifying the original `score_song()` calculation.
+
+**What was implemented:**
+
+The recommendation logic now applies a diversity penalty when an artist is already represented in the selected recommendations. It also applies a smaller penalty when a genre is already heavily represented. Penalized songs can still be recommended if their adjusted scores remain high enough.
+
+**Manual verification:**
+
+I tested the recommender with the existing user profiles. For the Chill Lofi profile, `Focus Flow` received both a repeat artist penalty of `-1.0` and a repeat genre penalty of `-0.5`. This confirmed that the diversity logic was applied while still allowing highly relevant songs to remain in the recommendations.
