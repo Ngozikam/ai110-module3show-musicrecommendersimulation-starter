@@ -24,7 +24,6 @@ The AI suggested five additional attributes: `popularity`, `release_decade`, `de
 
 **What did you verify or fix manually?**
 
-
 I reviewed the updated CSV structure to confirm that all 20 songs contained values for the five new attributes and that the original song data was preserved. I checked that popularity values were between 0 and 100 and that instrumentalness and speechiness values were between 0.0 and 1.0. I updated the CSV loader to convert the new numerical attributes to the correct Python data types and verified that the recommender ran successfully with all four test profiles. I also confirmed that the advanced attributes contributed to the recommendation scores and appeared correctly in the explanations.
 
 ---
@@ -45,11 +44,13 @@ I asked the AI coding assistant to suggest a modular way to support multiple ran
 
 The pattern appears in the `score_song()` function in `src/recommender.py`, where the selected `mode` determines which set of scoring weights is used. The `recommend_songs()` function passes the selected mode to `score_song()`, and `src/main.py` allows the scoring mode to be changed between `genre_first`, `mood_first`, and `energy_focused`.
 
+---
+
 ## Diversity and Fairness Logic
 
 **Prompt used:**
 
-Update my music recommender to add a diversity penalty during ranking. If a song's artist is already represented in the current top recommendations, reduce that song's score so songs from different artists have a better chance of appearing. Also consider preventing too many songs from the same genre. Keep the existing scoring modes and advanced song features unchanged, and implement the diversity logic in a simple, readable way without modifying the original `score_song()` calculation.
+"Update my music recommender to add a diversity penalty during ranking. If a song's artist is already represented in the current top recommendations, reduce that song's score so songs from different artists have a better chance of appearing. Also consider preventing too many songs from the same genre. Keep the existing scoring modes and advanced song features unchanged, and implement the diversity logic in a simple, readable way without modifying the original `score_song()` calculation."
 
 **What was implemented:**
 
@@ -58,3 +59,53 @@ The recommendation logic now applies a diversity penalty when an artist is alrea
 **Manual verification:**
 
 I tested the recommender with the existing user profiles. For the Chill Lofi profile, `Focus Flow` received both a repeat artist penalty of `-1.0` and a repeat genre penalty of `-0.5`. This confirmed that the diversity logic was applied while still allowing highly relevant songs to remain in the recommendations.
+
+---
+
+## Visual Summary Table
+
+**Prompt used:**
+
+"Update the terminal output of my Python music recommender to display the top recommendations in a formatted table using the `tabulate` library. The table should include Rank, Song, Artist, Score, and Reasons for each recommendation. Keep the existing advanced features, multiple scoring modes, and diversity penalty unchanged. The Reasons column must show the explanation for each song's score. Keep the implementation simple and readable."
+
+**What was implemented:**
+
+The terminal output was updated using the `tabulate` library. Each user profile now displays its top five recommendations in a formatted table with Rank, Song, Artist, Score, and Reasons columns.
+
+**Sample output — High-Energy Pop:**
+
+| Rank | Song | Artist | Score | Reasons |
+|:---:|---|---|---:|---|
+| 1 | Sunrise City | Neon Echo | 7.41 | Strong genre, mood, and energy match |
+| 2 | Gym Hero | Max Pulse | 5.94 | Strong genre and energy match |
+| 3 | Rooftop Lights | Indigo Parade | 3.30 | Mood and energy match |
+| 4 | Concrete Pulse | Eastline Crew | 2.77 | Strong energy similarity |
+| 5 | Midnight Cipher | Vector Bloom | 2.61 | Strong energy similarity |
+
+The table above summarizes the main reasons for each recommendation. The detailed scoring contributions for the top recommendation are shown below.
+
+**Detailed reasoning for `Sunrise City`:**
+
+- Genre match: `+3.0`
+- Mood match: `+1.0`
+- Energy similarity: `+0.92`
+- Detailed mood match: `+0.5`
+- Popularity similarity: `+0.49`
+- Release decade match: `+0.5`
+- Instrumentalness similarity: `+0.50`
+- Speechiness similarity: `+0.50`
+
+**Total score: `7.41`**
+
+**Diversity penalty example:**
+
+For the Chill Lofi profile, `Focus Flow` received:
+
+- Repeat artist diversity penalty: `-1.0`
+- Repeat genre diversity penalty: `-0.5`
+
+This demonstrates that the recommender keeps the table readable while still providing detailed score explanations and showing how the diversity logic affects ranking.
+
+**Manual verification:**
+
+I ran the recommender and verified that each of the four user profiles displays a separate formatted table. I also confirmed that each table contains the required Rank, Song, Artist, Score, and Reasons columns. The existing scoring modes, advanced song features, and diversity penalties continued to work after the output formatting was changed.
